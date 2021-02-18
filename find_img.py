@@ -68,17 +68,64 @@ def get_file_list(file_path):
         # 注意，这里使用lambda表达式，将文件按照最后修改时间顺序升序排列
         # os.path.getmtime() 函数是获取文件最后修改时间
         # os.path.getctime() 函数是获取文件最后创建时间
-        dir_list.sort(key=lambda x: os.path.getmtime(os.path.join(file_path, x)))
+        dir_list = sorted( dir_list , key=lambda x : os.path.getmtime( os.path.join( file_path , x ) ) )
+        # print(dir_list)
+
+        for i in range(len(dir_list)):
+            dir_list[i] = file_path + '/' + dir_list[i]
+        return dir_list
+
+def get_file(file_path):
+    """
+    寻找训练集的路径
+    :param file_path:路径
+    :return: 完整的路径
+    """
+    dir_list = os.listdir( file_path )
+    for i in range( len( dir_list ) ) :
+        dir_list[ i ] = file_path + '/' + dir_list[ i ]
+    return dir_list
+
+
+def label_find(list, wha, zhui):
+
+    for i in range( len( list ) ) :
+        list[ i ] = wha + list[ i ] + zhui
+    return list
+
 
 if __name__ == '__main__':
     list_train = pd.read_csv( '../dataset/af2019-cv-training-20190312/list_train.csv')
     list_test = pd.read_csv( '../dataset/af2019-cv-training-20190312/list_test.csv')
 
-    useList(list_train,'train')
-    print('train ok')
-    # get_file_list('../dataset/data_new/train')
-    # print('sorted ok')
-    useList(list_test,'test')
-    print('test ok')
+    # useList(list_train,'train')
+    # print('train ok')
+    # # get_file_list('../dataset/data_new/train')
+    # # print('sorted ok')
+    # useList(list_test,'test')
+    # print('test ok')
     # get_file_list('../dataset/data_new/test')
     # print('sorted ok')
+
+    # train_label = list_train['judge']
+    # test_label = list_test['judge']
+
+    # train_img = get_file('../dataset00/data_new/train')
+    # test_img =  get_file('../dataset/data_new/test')
+
+    # print(train_img)
+
+    # img = cv.imread(train_img[0])
+    # # print(img)
+    # cv.imshow( 'image' , img )
+    # cv.waitKey( 0 )
+    # cv.destroyAllWindows( )
+
+    train_img = label_find( list_train['id'].tolist() , 'dataset/data_new/train/' , '_c.jpg' )
+    test_img = label_find( list_test['id'].tolist() , 'dataset/data_new/test/' , '_c.jpg' )
+
+    img = cv.imread(train_img[0])
+    # print(img)
+    cv.imshow( 'image' , img )
+    cv.waitKey( 0 )
+    cv.destroyAllWindows( )
